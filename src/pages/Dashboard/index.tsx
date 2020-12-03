@@ -35,7 +35,7 @@ const Dashboard: React.FC = () => {
 
   useEffect(() => {
     async function loadTransactions(): Promise<void> {
-      const response = await api.get(`/transactions/`);
+      const response = await api.get('/transactions');
       setTransactions(response.data.transactions);
       setBalance(response.data.balance);
     }
@@ -50,23 +50,23 @@ const Dashboard: React.FC = () => {
         <CardContainer>
           <Card>
             <header>
-              <p>Entradas</p>
+              <p>Incomes</p>
               <img src={income} alt="Income" />
             </header>
             <h1 data-testid="balance-income">
-              R$
-              {balance.income ? balance.income : '0'}
+              {balance.income ? formatValue(Number(balance.income)) : '0'}
             </h1>
           </Card>
           <Card>
             <header>
-              <p>Saídas</p>
+              <p>Outcomes</p>
               <img src={outcome} alt="Outcome" />
             </header>
 
             <h1 data-testid="balance-outcome">
-              R$
-              {balance.outcome ? balance.outcome : '0'}
+              {balance.outcome
+                ? `- ${formatValue(Number(balance.outcome))}`
+                : '0'}
             </h1>
           </Card>
           <Card total>
@@ -75,8 +75,7 @@ const Dashboard: React.FC = () => {
               <img src={total} alt="Total" />
             </header>
             <h1 data-testid="balance-total">
-              R$
-              {balance.total ? balance.total : '0'}
+              {balance.total ? formatValue(Number(balance.total)) : '0'}
             </h1>
           </Card>
         </CardContainer>
@@ -85,10 +84,10 @@ const Dashboard: React.FC = () => {
           <table>
             <thead>
               <tr>
-                <th>Título</th>
-                <th>Preço</th>
-                <th>Categoria</th>
-                <th>Data</th>
+                <th>Title</th>
+                <th>Price</th>
+                <th>Category</th>
+                <th>Date</th>
               </tr>
             </thead>
 
@@ -98,11 +97,14 @@ const Dashboard: React.FC = () => {
                   <tr key={transaction.id}>
                     <td className="title">{transaction.title}</td>
                     <td className={transaction.type}>
-                      R$
-                      {transaction.value}
+                      {formatValue(transaction.value)}
                     </td>
                     <td>{transaction.category.title}</td>
-                    <td>{transaction.created_at}</td>
+                    <td>
+                      {new Date(transaction.created_at).toLocaleDateString(
+                        'fi-fi',
+                      )}
+                    </td>
                   </tr>
                 ))}
             </tbody>

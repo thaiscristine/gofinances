@@ -1,4 +1,6 @@
 const formatValue = (value: number): string =>
-  Intl.NumberFormat().format(value); // TODO
+  Intl.NumberFormat('fi-FI', { style: 'currency', currency: 'EUR' }).format(
+    value,
+  );
 
 export default formatValue;
